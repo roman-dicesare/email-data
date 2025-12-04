@@ -11,13 +11,17 @@ def read_email_data(file_name):
     
 
 def normalize_DateSendStarted(raw_data):
+    print("TYPE:", type(raw_data))
+    print("VALUE:", repr(raw_data))
+    print()
+
     if raw_data is None:
         sys.exit(1)
     
     cleaned_data = raw_data.strip() # this removes whitespace
 
     try:
-        dt = datetime.strptime(cleaned_data, "%m/%d/%Y %H:%M")
+        dt = datetime.strptime(cleaned_data,"%m/%d/%Y %I:%M:%S %p")
     except ValueError:
         print("Error when attempting to convert datetime")
         sys.exit(1)
