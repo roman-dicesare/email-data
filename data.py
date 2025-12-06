@@ -1,6 +1,9 @@
 from datetime import datetime
 import sys, csv
 
+
+
+
 def read_email_data(file_name):
     with open(file_name) as csvfile:
         reader = csv.DictReader(csvfile)
@@ -27,3 +30,12 @@ def normalize_DateSendStarted(raw_data):
         sys.exit(1)
     
     return dt
+
+def get_datetime(dataset, row_number):
+    first_row = dataset[row_number]
+    raw_date = first_row["DateSendStarted"]
+    normalized_date : str = normalize_DateSendStarted(raw_date)
+    return normalized_date
+
+def get_campaign(dataset, row_number):
+    pass
