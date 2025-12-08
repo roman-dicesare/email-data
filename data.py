@@ -1,5 +1,5 @@
 from datetime import datetime
-import sys, csv
+import sys, csv, get_def
 
 def read_email_data(file_name):
     with open(file_name) as csvfile:
@@ -7,7 +7,8 @@ def read_email_data(file_name):
         rows = []
         for row in reader:
             rows.append(row)
-        return rows    
+        return rows
+    #end
 
 def normalize_DateSendStarted(raw_data):
     if raw_data is None:
@@ -20,46 +21,42 @@ def normalize_DateSendStarted(raw_data):
     except ValueError:
         print("Error when attempting to convert datetime")
         sys.exit(1)
-    
     return dt
+    #end
 
-def get_datetime(dataset, row_number):
-    data_row = dataset[row_number]
-    raw_date = data_row["DateSendStarted"]
-    normalized_date : str = normalize_DateSendStarted(raw_date)
-    return normalized_date
+def handle_argvs():
+    if len(sys.argv) < 2:
+        print("Usage: Python3 main.py 'csv-files/<filename> [optional <campaign_initial>]")
+        sys.exit(1)
 
-def get_campaign(dataset, row_number):
-    data_row = dataset[row_number]
-    campaign_name = data_row["Campaign"]
-    return campaign_name
+    file_name: str = sys.argv[1]
+    return file_name
+    #end
 
-def get_totalOpens(dataset, row_number):
-    data_row = dataset[row_number]
-    totalOpens = data_row["TotalOpens"]
-    return totalOpens
+def set_campaign_initial():
+    if len(sys.argv) < 2:
+        print("Usage: Python3 main.py 'csv-files/<filename> [optional <campaign_initial>]")
+        sys.exit(1)
 
-def get_engagementRate(dataset, row_number):
-    data_row = dataset[row_number]
-    engagementRate : float = data_row["EngagementRate"]
-    return engagementRate
+    return sys.argv[2]
+    #end
 
-def get_total_rows_in_data(dataset):
-    total_data_rows = 0 #this assumes the first row is headers
-    for row in dataset:
-        total_data_rows += 1
-    return total_data_rows
+def open_file(file_name):
+    try:
+        dataset = read_email_data(file_name)
+    except FileNotFoundError:
+        print("Error: That file doesn't exist. Try command again.")
+        sys.exit(1)
+    
+    return dataset
+    #end
 
-def get_best_performer(dataset):
-    total_rows_in_set = get_total_rows_in_data(dataset)
-    best_performer = dataset[1]["EngagementRate"]
-    best_performer_campaign = ""
+def check_args(dataset):
+    args = []
 
-    for i in range(1, total_rows_in_set):
-        data_row = dataset[i]
-        data_in_row_engagement = data_row["EngagementRate"]
-        data_in_row_campaign = data_row["Campaign"]
-        if data_in_row_engagement > best_performer:
-            best_performer = data_in_row_engagement
-            best_performer_campaign = data_in_row_campaign
-    return best_performer, best_performer_campaign
+    for arg in sys.argv:
+        args.append(arg)
+
+
+
+    #end
