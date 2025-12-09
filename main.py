@@ -1,8 +1,13 @@
 import sys
 # from pprint import pprint
-import data, get_def
+import data, get_def, email_args
+
 
 def main():
+
+
+
+def old_main():
     file_name = data.handle_argvs()
     dataset = data.open_file(file_name)
     campaign_initial = data.set_campaign_initial()
