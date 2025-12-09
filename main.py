@@ -4,23 +4,33 @@ import data, get_def, email_args
 
 
 def main():
+    args = email_args.handle_cli_args()
+
+    file_path = args.file_path
+    dataset = data.read_email_data(file_path)
+    total_rows = get_def.get_total_rows_in_data(dataset)
+
+    if args.all:
+        campaign_count = 0
+
+        for i in range(1,total_rows):
+            data_row = dataset[i]
+            campaign_name = data_row["Campaign"]
+            campaign_subject = data_row["Subject"]
+            print(f"{i}: {campaign_name}")
+            print()
+            campaign_count += 1
+        print(f"Campaign Count: {campaign_count}")
+    
+    if args.best:
+        print("Test BEST")
+    
+    if args.top is not None:
+        print("Test TOP")
+    
+    if args.campaign:
+        print("Filtering by campaign")
 
 
-
-def old_main():
-    file_name = data.handle_argvs()
-    dataset = data.open_file(file_name)
-    campaign_initial = data.set_campaign_initial()
-
-    print()
-    print(f"{file_name} loaded succesfully.")
-    print("------------------------")
-    print()
-
-    # print(f"TEST: {get_def.get_specific_campaign(dataset,data.set_campaign_initial())}")
-
-    print(get_def.display_same_campaigns(get_def.get_specific_campaign(dataset,campaign_initial)))
-
-    ##end main()##
-
-main()
+if __name__ == "__main__":
+    main()
