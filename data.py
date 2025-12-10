@@ -24,40 +24,32 @@ def normalize_DateSendStarted(raw_data):
     return dt
     #end
 
-def handle_argvs():
-    if len(sys.argv) < 2:
-        print("Usage: Python3 main.py 'csv-files/<filename> [optional <campaign_initial>]")
-        sys.exit(1)
+def calculate_top_five(dataset, total_rows):
+    scored_rows = []
 
-    file_name: str = sys.argv[1]
-    return file_name
-    #end
-
-def set_campaign_initial():
-    if len(sys.argv) < 2:
-        print("Usage: Python3 main.py 'csv-files/<filename> [optional <campaign_initial>]")
-        sys.exit(1)
-
-    return sys.argv[2]
-    #end
-
-def open_file(file_name):
-    try:
-        dataset = read_email_data(file_name)
-    except FileNotFoundError:
-        print("Error: That file doesn't exist. Try command again.")
-        sys.exit(1)
+    for i in range(0,total_rows):
+        data_row = dataset[i]
+        engagement_rate = (data_row["EngagementRate"]).strip(" %")
+        scored_rows.append({"Campaign": data_row["Campaign"],
+                            "Subject" : data_row["Subject"], 
+                            "Engagement Rate" : float(engagement_rate),
+                            "TotalDelivered" : data_row["TotalDelivered"]})
     
-    return dataset
-    #end
+    sorted_rows = sorted(scored_rows, key = lambda row: row["Engagement Rate"], reverse = True)
 
-def check_args(dataset):
-    args = []
+    top_five = sorted_rows[:5]
 
-    for arg in sys.argv:
-        args.append(arg)
+    return top_five
 
+def print_top_five_emails(dataset,total_rows):
+    top_five_rates = calculate_top_five(dataset,total_rows)
+    print("Top 5 email campaigns:")
+    print("-----")
+    for item in top_five_rates:
+        print(f"Campaign Name: {item['Campaign']}")
+        print(f"Subject: {item['Subject']}")
+        print(f"Engagement Rate: {item['Engagement Rate']}")
+        print(f"Total Delivered: {item['TotalDelivered']}")
+        print()
 
-
-    #end
-    
+#end top_5

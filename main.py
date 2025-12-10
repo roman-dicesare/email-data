@@ -11,25 +11,26 @@ def main():
     total_rows = get_def.get_total_rows_in_data(dataset)
 
     if args.all:
-        campaign_count = 0
-
         for i in range(1,total_rows):
-            data_row = dataset[i]
-            campaign_name = data_row["Campaign"]
-            campaign_subject = data_row["Subject"]
+            campaign_name = get_def.get_campaign(dataset,i)
+            total_opens = get_def.get_totalOpens(dataset, i)
             print(f"{i}: {campaign_name}")
+            print(f"Total Opens: {total_opens}")
             print()
-            campaign_count += 1
-        print(f"Campaign Count: {campaign_count}")
     
     if args.best:
-        print("Test BEST")
+        best_performing_email = get_def.get_best_performer(dataset)
+        print(best_performing_email)
     
     if args.top is not None:
-        print("Test TOP")
-    
+        print()
+        data.print_top_five_emails(dataset,total_rows)
+
     if args.campaign:
         print("Filtering by campaign")
+    
+    if args.worst:
+        print("Test WORST")
 
 
 if __name__ == "__main__":

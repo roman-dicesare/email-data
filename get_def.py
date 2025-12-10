@@ -40,7 +40,10 @@ def get_best_performer(dataset):
         if data_in_row_engagement > best_performer:
             best_performer = data_in_row_engagement
             best_performer_campaign = data_in_row_campaign
-    return best_performer, best_performer_campaign
+        
+        best_performing = (f"{best_performer_campaign} with a {best_performer} engagement rate.")
+
+    return best_performing
     #end
 
 def get_worst_performer(dataset):
