@@ -24,32 +24,43 @@ def normalize_DateSendStarted(raw_data):
     return dt
     #end
 
-def calculate_top_five(dataset, total_rows):
+def calculate_top_five(dataset, n):
     scored_rows = []
 
-    for i in range(0,total_rows):
-        data_row = dataset[i]
-        engagement_rate = (data_row["EngagementRate"]).strip(" %")
-        scored_rows.append({"Campaign": data_row["Campaign"],
-                            "Subject" : data_row["Subject"], 
-                            "Engagement Rate" : float(engagement_rate),
-                            "TotalDelivered" : data_row["TotalDelivered"]})
+    for row in dataset:
+        engagement_rate = (row["EngagementRate"]).strip(" %")
+        scored_rows.append({"Campaign": row["Campaign"],
+                            "Subject" : row["Subject"], 
+                            "EngagementRate" : float(engagement_rate),
+                            "TotalDelivered" : row["TotalDelivered"]})
     
-    sorted_rows = sorted(scored_rows, key = lambda row: row["Engagement Rate"], reverse = True)
+    sorted_rows = sorted(scored_rows, key = lambda row: row["EngagementRate"], reverse = True)
 
-    top_five = sorted_rows[:5]
+    top_five = sorted_rows[:n]
 
     return top_five
 
-def print_top_five_emails(dataset,total_rows):
-    top_five_rates = calculate_top_five(dataset,total_rows)
-    print("Top 5 email campaigns:")
+def print_top_five_emails(dataset,n):
+    top_five_rates = calculate_top_five(dataset, n)
+    print(f"Top email campaigns:")
     print("-----")
     for item in top_five_rates:
         print(f"Campaign Name: {item['Campaign']}")
         print(f"Subject: {item['Subject']}")
-        print(f"Engagement Rate: {item['Engagement Rate']}")
+        print(f"Engagement Rate: {item['EngagementRate']}")
         print(f"Total Delivered: {item['TotalDelivered']}")
         print()
 
 #end top_5
+
+def filter_by_campaign(dataset, campaign_alias):
+    upper_alias = campaign_alias.upper()
+
+    matching_campaigns = []
+
+    for row in dataset:
+        campaign_name = row["Campaign"]
+        if upper_alias in campaign_name.upper():
+            matching_campaigns.append(row)
+    
+    return matching_campaigns

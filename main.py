@@ -8,13 +8,15 @@ def main():
 
     file_path = args.file_path
     dataset = data.read_email_data(file_path)
-    total_rows = get_def.get_total_rows_in_data(dataset)
+
+    if args.campaign:
+        dataset = data.filter_by_campaign(dataset,args.campaign)
 
     if args.all:
-        for i in range(1,total_rows):
-            campaign_name = get_def.get_campaign(dataset,i)
-            total_opens = get_def.get_totalOpens(dataset, i)
-            print(f"{i}: {campaign_name}")
+        for row in dataset:
+            campaign_name = get_def.get_campaign(dataset,row)
+            total_opens = get_def.get_totalOpens(dataset, row)
+            print(f"{row}: {campaign_name}")
             print(f"Total Opens: {total_opens}")
             print()
     
@@ -23,14 +25,19 @@ def main():
         print(best_performing_email)
     
     if args.top is not None:
-        print()
-        data.print_top_five_emails(dataset,total_rows)
-
-    if args.campaign:
-        print("Filtering by campaign")
+        dataset = data.calculate_top_five(dataset,args.top)
     
     if args.worst:
         print("Test WORST")
+
+    
+    print_data(dataset)
+
+def print_data(dataset):
+    for row in dataset:
+        print(f"Campaign: {row["Campaign"]}")
+        print(f"Engagement Rate: {row["EngagementRate"]}")
+        print()
 
 
 if __name__ == "__main__":
