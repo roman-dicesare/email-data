@@ -1,5 +1,12 @@
 from datetime import datetime
-import sys, csv, get_def
+import sys, csv
+
+def print_data(dataset):
+    for row in dataset:
+        print(f"Campaign: {row["Campaign"]}")
+        print(f"Engagement Rate: {row["EngagementRate"]}")
+        print(f"Total Delivered : {row["TotalDelivered"]}")
+        print()
 
 def read_email_data(file_name):
     with open(file_name) as csvfile:
@@ -28,30 +35,15 @@ def calculate_top_five(dataset, n):
     scored_rows = []
 
     for row in dataset:
-        engagement_rate = (row["EngagementRate"]).strip(" %")
-        scored_rows.append({"Campaign": row["Campaign"],
-                            "Subject" : row["Subject"], 
-                            "EngagementRate" : float(engagement_rate),
-                            "TotalDelivered" : row["TotalDelivered"]})
-    
+        engagement_rate = row["EngagementRate"].strip(" %")
+        row["EngagementRate"] = float(engagement_rate)
+        scored_rows.append(row)
+
     sorted_rows = sorted(scored_rows, key = lambda row: row["EngagementRate"], reverse = True)
 
     top_five = sorted_rows[:n]
 
     return top_five
-
-def print_top_five_emails(dataset,n):
-    top_five_rates = calculate_top_five(dataset, n)
-    print(f"Top email campaigns:")
-    print("-----")
-    for item in top_five_rates:
-        print(f"Campaign Name: {item['Campaign']}")
-        print(f"Subject: {item['Subject']}")
-        print(f"Engagement Rate: {item['EngagementRate']}")
-        print(f"Total Delivered: {item['TotalDelivered']}")
-        print()
-
-#end top_5
 
 def filter_by_campaign(dataset, campaign_alias):
     upper_alias = campaign_alias.upper()
@@ -64,3 +56,14 @@ def filter_by_campaign(dataset, campaign_alias):
             matching_campaigns.append(row)
     
     return matching_campaigns
+
+def calculcate_worst(dataset):
+
+    worst = []
+
+    worst_campaign = dataset[0]
+    for row in dataset:
+        if row["EngagementRate"] < worst_campaign["EngagementRate"]:
+            worst_campaign = row
+    worst.append(worst_campaign)
+    return worst

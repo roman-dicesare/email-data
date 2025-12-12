@@ -12,10 +12,6 @@ def handle_cli_args():
     parser.add_argument("-c","--campaign",
                         type=str,
                         help="Filter results by campaign initial (optional)")
-
-    parser.add_argument("-a","--all",
-                        action="store_true",
-                        help="Show ALL emails")
     
     parser.add_argument("-t","--top",
                         type=int,
